@@ -1,10 +1,21 @@
-class SearchForm {
-    constructor() {
-      this.symbol = new URLSearchParams(window.location.search).toString().split("=", [2])[1];
-      document.addEventListener("DOMContentLoaded", this.getCompanyProfile.bind(this));
+{/* <div class="container d-flex flex-column mt-2" id="container">
+
+<div class="d-flex align-items-center justify-content-center" id="imageAndName"></div>
+
+<div class="d-flex justify-content-center" id="priceAndChange"></div>
+
+<div id="description"></div>
+
+<div style="width: 800px;"><canvas id="acquisitions"></canvas></div> */}
+
+
+class CompanyInfo {
+    constructor(element, symbol) {
+      this.symbol = symbol
+      this.element = element
     }
   
-    async getCompanyProfile() {
+    async load() {
       const response = await fetch(`https://stock-exchange-dot-full-stack-course-services.ew.r.appspot.com/api/v3/company/profile/${this.symbol}`)
       const data = await response.json()
       const { image, companyName, price, changesPercentage, description } = await data.profile
@@ -12,7 +23,6 @@ class SearchForm {
       this.displayIconAndName(image, companyName)
       this.displayPriceAndChange(price, changesPercentage)
       this.displayDescription(description)
-      this.getHistoricalResults(this.symbol)
     }
   
     convertToPercentages(number) {
@@ -21,6 +31,10 @@ class SearchForm {
   
     displayIconAndName(imageUrl, companyName) {
       let image = document.createElement("img")
+      let imageContainer = document.createElement("div")
+      this.element.append(imageContainer)
+      imageContainer.id = "imageAndName"
+      imageContainer.classList.add("d-flex", "align-items-center", "justify-content-center")
       document.getElementById('imageAndName').append(image)
       image.src = imageUrl
       let div = document.createElement("div");
@@ -29,7 +43,11 @@ class SearchForm {
     }
   
     displayPriceAndChange(price, change) {
-      let div = document.createElement("div");
+      let div = document.createElement("div")
+      let priceContainer = document.createElement("div")
+      this.element.append(priceContainer)
+      priceContainer.id = "priceAndChange"
+      priceContainer.classList.add("d-flex", "justify-content-center")
       document.getElementById('priceAndChange').append(div)
       div.innerHTML = `Stock Price: $${price}`
       let div2 = document.createElement("div");
@@ -45,6 +63,9 @@ class SearchForm {
   
     displayDescription(description) {
       let div = document.createElement("div");
+      let descriptionContainer = document.createElement("div")
+      this.element.append(descriptionContainer)
+      descriptionContainer.id = "description"
       document.getElementById('description').append(div)
       div.innerHTML = description
     }
@@ -55,11 +76,16 @@ class SearchForm {
       document.getElementById('description').textContent = ""
     }
   
-    async getHistoricalResults() {
+    async addChart() {
       const responseHistory = await fetch(`https://stock-exchange-dot-full-stack-course-services.ew.r.appspot.com/api/v3/historical-price-full/${this.symbol}?serietype=line`)
       const dataHistory = await responseHistory.json()
       const resultsNew = dataHistory.historical.reverse()
-  
+      
+      let chartContainer = document.createElement("div")
+      chartContainer.innerHTML = `<canvas id="acquisitions"></canvas>`
+      this.element.append(chartContainer)
+
+
       new Chart(
         document.getElementById('acquisitions'),
         {
@@ -77,7 +103,5 @@ class SearchForm {
     }
 );
 }}
-
-const showForm = new SearchForm();
 
 

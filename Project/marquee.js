@@ -9,7 +9,7 @@ class Marquee {
         this.element = element;
     }
 
-    async render(textToGoInside) {
+    async load() {
 
         this.element.style.overflow = "hidden";
         this.element.style.whiteSpace = "nowrap";
@@ -23,14 +23,14 @@ class Marquee {
         marq.style.whiteSpace = "nowrap";
         marq.style.animationTimingFunction = "linear";
         marq.style.animationIterationCount = "infinite";
-        marq.innerHTML = await textToGoInside
+        marq.innerHTML = await this.showLiveSharePrice()
 
         this.element.appendChild(marq);
 
 
     }
 
-    static async showLiveSharePrice() {
+    async showLiveSharePrice() {
 
         // Pull the data for live price quotes
 
@@ -57,12 +57,4 @@ class Marquee {
     }
 }
 
-// marquee is the element we are feeding to the class
-const marquee = new Marquee(document.getElementById("marq-container"))
-
-//To run the showliveprice function in order to get the combined text to them feed into the render function
-const combinedText = Marquee.showLiveSharePrice()
-
-// Run the Javascript class
-marquee.render(combinedText)
 

@@ -1,9 +1,10 @@
 
 class SearchResults {
 
-    constructor() {
+    constructor(element) {
         // Declare all the variables to be worked with
 
+        this.element = element
         // Creating all the elements needed for html
         let listContainer = document.createElement('ul')
         let searchButton = document.createElement('button')
@@ -42,7 +43,8 @@ class SearchResults {
         this.compareButton;
 
         // Append list container to its parent
-        document.querySelector("[id='searchContainer']").append(listContainer)
+        this.element.append(listContainer)
+        searchContainer.append(this.element)
 
         // Event listener that sends a fetch based on input value
         this.searchButton.addEventListener('click', this.getStockData.bind(this))
@@ -124,7 +126,7 @@ class SearchResults {
         listContainer.classList.add('list-group')
 
         this.compareButton = document.querySelectorAll("button")
-        
+
         // Call the event listener and run function
         this.attachListeners(data)
     }
@@ -181,6 +183,3 @@ class SearchResults {
 
 }
 
-// call this class
-
-const showSearchResult = new SearchResults()
