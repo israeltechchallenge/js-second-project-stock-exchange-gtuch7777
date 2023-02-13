@@ -39,12 +39,16 @@ class SearchResults {
         this.searchButton = document.getElementById("button");
         this.searchValue = document.getElementById("searchValue")
         this.spinner = document.getElementById('loadingSpinner')
+        this.compareButton;
 
         // Append list container to its parent
         document.querySelector("[id='searchContainer']").append(listContainer)
 
         // Event listener that sends a fetch based on input value
         this.searchButton.addEventListener('click', this.getStockData.bind(this))
+
+        
+        
 
     }
 
@@ -105,8 +109,9 @@ class SearchResults {
         let searchInput = searchValue.value
 
         const list = data.map(item => {
-            return `<li class="list"> <img class="image" src=${item.profile.image} alt="Picture Dosen't exist"> <a href="company.html?symbol=${item.symbol}"> ${item.name} <span>(${item.symbol})</span> <span id="percentage">(${this.convertToPercentages(item.profile.changesPercentage)})</span> </a> </li>`;
+            return `<li class="list"> <img class="image" src=${item.profile.image} alt="Picture Dosen't exist"> <a href="company.html?symbol=${item.symbol}"> ${item.name} <span>(${item.symbol})</span> <span id="percentage">(${this.convertToPercentages(item.profile.changesPercentage)})</span> </a> <button class="compare btn btn-info btn-sm text-center" id="${item.symbol}">Compare</button> </li>`;
         }).join("");
+
 
         // Create a regex that searches for the name and ticker and adds a space around them
 
@@ -117,6 +122,11 @@ class SearchResults {
         
         listContainer.innerHTML = `${outputString}`
         listContainer.classList.add('list-group')
+
+        this.compareButton = document.querySelectorAll("button")
+        
+        // Call the event listener and run function
+        this.attachListeners(data)
     }
 
     changeColorPercentage() {
@@ -144,6 +154,30 @@ class SearchResults {
     disableSpinner() {
         this.spinner.classList.add("d-none")
     }
+
+
+    // This event listener identifies which button has been clicked and then feeds the "symbol" into the find object symbol
+
+    attachListeners(data) {
+        for (const button of this.compareButton) {
+          button.addEventListener('click', (event) => {
+            const symbolButton = event.target.id
+            this.findObjectBySymbol(symbolButton, data)
+          });
+        }
+        
+    }
+
+    // Function to connect the symbol from the compare button click with the object and console log it
+
+    findObjectBySymbol(symbol, array) {
+        for (let i = 0; i < array.length; i++) {
+          if (array[i].symbol === symbol) {
+            console.log(array[i])
+          }
+        }
+        return null;
+      }
 
 }
 

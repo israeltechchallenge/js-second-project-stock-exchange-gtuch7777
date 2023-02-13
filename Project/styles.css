@@ -25,6 +25,9 @@ span {
     color: black
 }
 
+.compare{
+  margin-left: auto;
+}
 .green {
     color: green;
     font-weight: 500;
