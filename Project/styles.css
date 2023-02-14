@@ -17,6 +17,12 @@
     gap: 5px;
 }
 
+.parent{
+  display: flex;
+  flex-direction: row;
+  gap: 30px
+}
+
 a:link {
     text-decoration: none;
 }

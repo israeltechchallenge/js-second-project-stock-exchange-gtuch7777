@@ -1,7 +1,63 @@
 
-class SearchResults {
+class CompareStocks {
+
+    constructor() {
+        this.searchContainer = document.getElementById("searchContainer")
+        this.comparisonDiv = document.createElement('div')
+        this.comparisonDiv.id = 'comparisonDiv'
+        this.searchContainer.prepend(this.comparisonDiv)
+        this.compareXCompanies = document.createElement('div')
+        this.compareXCompanies.id = 'comparisonX'
+        this.searchContainer.prepend(this.compareXCompanies)
+        this.compareCount;
+        this.allButtons = document.querySelectorAll('#comparisonButton')
+
+
+    }
+
+    addToList(contentToAdd) {
+        this.comparisonDiv.innerHTML += `<button class="comparisonButton">${contentToAdd} x </button>`
+      
+        let companiesCount = document.querySelectorAll('.comparisonButton')
+        this.compareCount = companiesCount.length
+      
+        let accumulatedSymbols = []
+      
+        for (let i = 0; i < companiesCount.length; i++) {
+          accumulatedSymbols.push(companiesCount[i].innerText.split(" ", 1))
+          companiesCount[i].addEventListener('click', () => {
+            companiesCount[i].remove()
+            this.compareCount--
+            this.updateCompareUrl()
+          })
+        }
+      
+        this.updateCompareUrl()
+      }
+      
+      updateCompareUrl() {
+        let companiesCount = document.querySelectorAll('.comparisonButton')
+        let accumulatedSymbols = []
+      
+        for (let i = 0; i < companiesCount.length; i++) {
+          accumulatedSymbols.push(companiesCount[i].innerText.split(" ", 1))
+        }
+      
+        const UrlString = accumulatedSymbols.join(",")
+      
+        this.compareXCompanies.innerHTML = `<a href="compare.html?symbols=${UrlString}">Compare ${companiesCount.length} Companies</a>`
+      }
+
+    
+
+}
+
+
+class SearchResults extends CompareStocks {
 
     constructor(element) {
+
+        super()
         // Declare all the variables to be worked with
 
         this.element = element
@@ -22,7 +78,7 @@ class SearchResults {
         // Edit the properties accordingly
         listContainer.id = "listContainer"
         searchContainer.classList.add("text-center")
-        searchValue.type ="text"
+        searchValue.type = "text"
         searchValue.id = "searchValue"
         searchValue.placeholder = "Type search here"
         searchValue.style.width = "100%"
@@ -49,8 +105,8 @@ class SearchResults {
         // Event listener that sends a fetch based on input value
         this.searchButton.addEventListener('click', this.getStockData.bind(this))
 
-        
-        
+
+
 
     }
 
@@ -99,18 +155,17 @@ class SearchResults {
         // Disable the loading spinner
         this.disableSpinner()
 
-        // Change the color of the percentages
-        this.changeColorPercentage()
+        
 
     }
 
     // Create a list with the returned object
-    
-    createList(data) {
+
+    async createList(data) {
 
         let searchInput = searchValue.value
 
-        const list = data.map(item => {
+        const list = await data.map(item => {
             return `<li class="list"> <img class="image" src=${item.profile.image} alt="Picture Dosen't exist"> <a href="company.html?symbol=${item.symbol}"> ${item.name} <span>(${item.symbol})</span> <span id="percentage">(${this.convertToPercentages(item.profile.changesPercentage)})</span> </a> <button class="compare btn btn-info btn-sm text-center" id="${item.symbol}">Compare</button> </li>`;
         }).join("");
 
@@ -119,20 +174,26 @@ class SearchResults {
 
         const regex = new RegExp(`(?<=\\s|\\()${searchInput}`, "gi");
         const outputString = `${list.replace(regex, (match) => `<span class="yellow">${match}</span>`)}`;
-        
+
         // Add the output to the container inner html
-        
+
         listContainer.innerHTML = `${outputString}`
         listContainer.classList.add('list-group')
 
+        // Change the color of the percentages
+        this.changeColorPercentage()
         this.compareButton = document.querySelectorAll("button")
 
         // Call the event listener and run function
         this.attachListeners(data)
+
+        const comparisons = new CompareStocks()
+
+
     }
 
     changeColorPercentage() {
-        let percentageCheck = document.querySelectorAll("[id='percentage']")
+        let percentageCheck = document.querySelectorAll('#percentage')
         for (let i = 0; i < percentageCheck.length; i++) {
             if (percentageCheck[i].innerHTML.length === 7) {
                 percentageCheck[i].classList.add('green')
@@ -162,24 +223,30 @@ class SearchResults {
 
     attachListeners(data) {
         for (const button of this.compareButton) {
-          button.addEventListener('click', (event) => {
-            const symbolButton = event.target.id
-            this.findObjectBySymbol(symbolButton, data)
-          });
+            button.addEventListener('click', (event) => {
+                const symbolButton = event.target.id
+                this.findObjectBySymbol(symbolButton, data)
+            });
         }
-        
+
     }
 
     // Function to connect the symbol from the compare button click with the object and console log it
 
     findObjectBySymbol(symbol, array) {
         for (let i = 0; i < array.length; i++) {
-          if (array[i].symbol === symbol) {
-            console.log(array[i])
-          }
+            if (array[i].symbol === symbol) {
+                let stockSymbol = array[i].symbol
+                // console.log(array[i].symbol);
+                this.addToList(stockSymbol)
+                
+
+            }
         }
         return null;
-      }
+    }
 
 }
+
+
 
