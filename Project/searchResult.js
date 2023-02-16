@@ -119,7 +119,27 @@ class SearchResults extends CompareStocks {
     // Fetch that returns response from API
     async getStockData() {
         let searchInput = searchValue.value
+
+        // Get the URL
+        let url = window.location.href;
+
+        // This is the starting URL
+        let baseUrl = window.location.origin + window.location.pathname;
+
+        // Reset the URL after each "Search"
+        history.replaceState(null, '', baseUrl);
+
+        // Change URL to add query string in milestone 2.2 but use an IF statement to make sure if the input is blank to return nothing and stop the function
+        let newUrl = baseUrl + `?query=${searchInput}`;
+        if(searchInput === ""){
+            history.pushState(null, '', baseUrl);
+            return;
+        }  else{
+            history.pushState(null, '', newUrl);
+        }
+
         this.enableSpinner()
+
         const response = await fetch(`https://stock-exchange-dot-full-stack-course-services.ew.r.appspot.com/api/v3/search?query=${searchInput}&limit=10&exchange=NASDAQ`)
         const data = await response.json()
 
