@@ -15,40 +15,42 @@ class CompareStocks {
 
     }
 
-    addToList(contentToAdd) {
+    addAndRemoveList(contentToAdd) {
         this.comparisonDiv.innerHTML += `<button class="comparisonButton">${contentToAdd} x </button>`
-      
+
         let companiesCount = document.querySelectorAll('.comparisonButton')
         this.compareCount = companiesCount.length
-      
+
         let accumulatedSymbols = []
-      
+
         for (let i = 0; i < companiesCount.length; i++) {
-          accumulatedSymbols.push(companiesCount[i].innerText.split(" ", 1))
-          companiesCount[i].addEventListener('click', () => {
-            companiesCount[i].remove()
-            this.compareCount--
-            this.updateCompareUrl()
-          })
+            accumulatedSymbols.push(companiesCount[i].innerText.split(" ", 1))
+            companiesCount[i].addEventListener('click', () => {
+                companiesCount[i].remove()
+                this.compareCount--
+                this.updateCompareUrl()
+            })
         }
-      
+
         this.updateCompareUrl()
-      }
-      
-      updateCompareUrl() {
+    }
+
+    updateCompareUrl() {
         let companiesCount = document.querySelectorAll('.comparisonButton')
         let accumulatedSymbols = []
-      
-        for (let i = 0; i < companiesCount.length; i++) {
-          accumulatedSymbols.push(companiesCount[i].innerText.split(" ", 1))
-        }
-      
-        const UrlString = accumulatedSymbols.join(",")
-      
-        this.compareXCompanies.innerHTML = `<a href="compare.html?symbols=${UrlString}">Compare ${companiesCount.length} Companies</a>`
-      }
 
-    
+        for (let i = 0; i < companiesCount.length; i++) {
+            accumulatedSymbols.push(companiesCount[i].innerText.split(" ", 1))
+        }
+
+        const UrlString = accumulatedSymbols.join(",")
+        console.log(UrlString)
+
+        this.compareXCompanies.innerHTML = `<a href="compare.html?symbols=${UrlString}">Compare ${companiesCount.length} Companies</a>`
+    }
+
+
+
 
 }
 
@@ -102,10 +104,12 @@ class SearchResults extends CompareStocks {
         this.element.append(listContainer)
         searchContainer.append(this.element)
 
-        // Event listener that sends a fetch based on input value
-        this.searchButton.addEventListener('click', this.getStockData.bind(this))
+        // This is the debounce for the auto search
+        this.debouncedSaveInput = this.debounce(this.saveInput.bind(this), 1000);
 
 
+        // Event listener that sends a fetch based on input value (including the autosearch debounce feature)
+        this.searchValue.addEventListener('keyup', this.debounce(this.getStockData.bind(this), 1000))
 
 
     }
@@ -155,7 +159,7 @@ class SearchResults extends CompareStocks {
         // Disable the loading spinner
         this.disableSpinner()
 
-        
+
 
     }
 
@@ -238,15 +242,41 @@ class SearchResults extends CompareStocks {
             if (array[i].symbol === symbol) {
                 let stockSymbol = array[i].symbol
                 // console.log(array[i].symbol);
-                this.addToList(stockSymbol)
-                
+                this.addAndRemoveList(stockSymbol)
+
 
             }
         }
         return null;
     }
 
+    // Function for milestone 2.1 to debounce and autosearch
+
+    debounce(func, timeout = 1000) {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => { func.apply(this, args); }, timeout);
+        };
+    }
+
+    saveInput() {
+        console.log(this.searchValue.value);
+    }
+
+    hello() {
+        // Call the debounced version of saveInput
+        this.debouncedSaveInput();
+    }
+
+
+
+
 }
+
+
+
+
 
 
 
