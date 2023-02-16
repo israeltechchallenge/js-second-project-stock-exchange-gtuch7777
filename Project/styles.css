@@ -1,73 +1,81 @@
 .list {
-    align-items: center;
-    color: red;
-    display: flex;
-    border-bottom: 1px solid grey;
-    padding: 1rem 0 1rem 0;
+  align-items: center;
+  color: red;
+  display: flex;
+  border-bottom: 1px solid grey;
+  padding: 1rem 0 1rem 0;
 }
 
 .image {
-    width: 20px;
-    height: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 .list {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.parent{
+.parent {
   display: flex;
   flex-direction: row;
   gap: 30px
 }
 
 a:link {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 span {
-    color: black
+  color: black
 }
 
-.compare{
+.compare {
   margin-left: auto;
 }
+
 .green {
-    color: green;
-    font-weight: 500;
+  color: green;
+  font-weight: 500;
 }
 
 .red {
-    color: red;
-    font-weight: 500;
+  color: red;
+  font-weight: 500;
 }
 
-.yellow{
+.yellow {
   background-color: yellow;
 }
 
 .align-items-center {
-    gap: 20px;
-    font-size: 2rem;
+  gap: 20px;
+  font-size: 2rem;
 }
 
 .justify-content-center {
-    gap: 30px;
-    font: 1rem;
-    font-size: 1.5rem;
+  gap: 30px;
+  font: 1rem;
+  font-size: 1.5rem;
 }
 
 .flex-column {
-    gap: 20px;
+  gap: 20px;
 }
 
 .marq span:nth-of-type(2n) {
-    color: green;
-  }
+  color: green;
+}
 
-input{box-sizing:border-box}
+input {
+  box-sizing: border-box
+}
+
+.height{
+  height: fit-content;
+  padding-bottom: 1rem
+}
 
 /* 
     Code for milestone 4 
@@ -86,12 +94,13 @@ input{box-sizing:border-box}
     padding-right: 100%;
     animation: marq 300s linear infinite;
   } */
-  
-  @keyframes marquee {
-    0% {
-      transform: translateX(100%);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
   }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}

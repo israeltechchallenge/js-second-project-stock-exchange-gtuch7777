@@ -22,8 +22,7 @@
     <div id="parent container" class="container mt-5 parent">
 
         <div id="compInfo" class="container mt-5 shadow-lg bg-white rounded px-4"></div>
-<!-- 
-       NEED TO ADD THIS IN TO NEW INSTANCE X 3 <div id="compInfo2" class="container mt-5 shadow-lg bg-white rounded"></div> -->
+
 
     </div>
 
@@ -39,21 +38,13 @@
 
         const symbol = params.get('symbol')
 
-        const symbols = params.get('symbols')
-
-        console.log(symbols);
-
         const compInfo = new CompanyInfo(document.getElementById('compInfo'), symbol)
-
-        const compInfo2 = new CompanyInfo(document.getElementById('compInfo2'), symbols)
 
         await compInfo.load()
 
         await compInfo.addChart()
 
-        await compInfo2.load()
 
-        await compInfo2.addChart()
     })();
 
 </script>

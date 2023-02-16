@@ -7,9 +7,12 @@ class CompanyInfo {
       this.element = element
     }
   
+    // Async function to fetch the company data
     async load() {
       const response = await fetch(`https://stock-exchange-dot-full-stack-course-services.ew.r.appspot.com/api/v3/company/profile/${this.symbol}`)
       const data = await response.json()
+
+      // Destruction to create variables
       const { image, companyName, price, changesPercentage, description } = await data.profile
    
   
@@ -18,10 +21,13 @@ class CompanyInfo {
       this.displayDescription(description)
     }
   
+    // Convert the result into a percentage
     convertToPercentages(number) {
       return Number(number).toFixed(2) + "%"
     }
+
   
+    // Rendering the icon and name
     displayIconAndName(imageUrl, companyName) {
       let image = document.createElement("img")
       let imageContainer = document.createElement("div")
@@ -35,6 +41,7 @@ class CompanyInfo {
       div.innerHTML = companyName
     }
   
+    // Rendering the price and change
     displayPriceAndChange(price, change) {
       let div = document.createElement("div")
       let priceContainer = document.createElement("div")
@@ -54,6 +61,7 @@ class CompanyInfo {
       }
     }
   
+    // Rendering the description
     displayDescription(description) {
       let div = document.createElement("div");
       let descriptionContainer = document.createElement("div")
@@ -63,12 +71,14 @@ class CompanyInfo {
       div.innerHTML = description
     }
   
+    // To reset the screen at the beginning of each new search
     resetScreen() {
       document.getElementById(`${this.symbol}imageAndName`).textContent = ""
       document.getElementById(`${this.symbol}priceAndChange`).textContent = ""
       document.getElementById(`${this.symbol}description`).textContent = ""
     }
   
+    // To add in the chart from historical data
     async addChart() {
       const responseHistory = await fetch(`https://stock-exchange-dot-full-stack-course-services.ew.r.appspot.com/api/v3/historical-price-full/${this.symbol}?serietype=line`)
       const dataHistory = await responseHistory.json()

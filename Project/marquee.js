@@ -17,6 +17,7 @@ class Marquee {
 
         let marq = document.createElement("div");
 
+        // Create the marquee
         marq.classList.add('marq')
         marq.style.animationName = "marquee";
         marq.style.animationDuration = "60s";

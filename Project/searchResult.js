@@ -2,6 +2,8 @@
 class CompareStocks {
 
     constructor() {
+
+        // To construct all the html elements and append relevant ones
         this.searchContainer = document.getElementById("searchContainer")
         this.comparisonDiv = document.createElement('div')
         this.comparisonDiv.id = 'comparisonDiv'
@@ -15,7 +17,28 @@ class CompareStocks {
 
     }
 
+    // Function to add and remove the compare company count
     addAndRemoveList(contentToAdd) {
+
+        let companiesCountCheckMaxThree = document.querySelectorAll('.comparisonButton')
+        // Max 3 companies to compare limit
+        if (companiesCountCheckMaxThree.length > 2) {
+            return alert('You can compare max 3 companies')
+        } else {
+            // Check for duplicate companies before adding new button and then alert
+            let duplicateFound = false;
+            for (let i = 0; i < companiesCountCheckMaxThree.length; i++) {
+                if (companiesCountCheckMaxThree[i].innerText.includes(contentToAdd)) {
+                    duplicateFound = true;
+                    break;
+                }
+            }
+            if (duplicateFound) {
+                return alert(`You've already added ${contentToAdd} to the comparison list.`);
+            }
+        }
+
+
         this.comparisonDiv.innerHTML += `<button class="comparisonButton">${contentToAdd} x </button>`
 
         let companiesCount = document.querySelectorAll('.comparisonButton')
@@ -24,7 +47,8 @@ class CompareStocks {
         let accumulatedSymbols = []
 
         for (let i = 0; i < companiesCount.length; i++) {
-            accumulatedSymbols.push(companiesCount[i].innerText.split(" ", 1))
+
+            accumulatedSymbols.push(companiesCount[i].innerText.split(" ", 1).join(""))
             companiesCount[i].addEventListener('click', () => {
                 companiesCount[i].remove()
                 this.compareCount--
@@ -33,8 +57,10 @@ class CompareStocks {
         }
 
         this.updateCompareUrl()
+
     }
 
+    // To add the a tag that will redirect the user to the compare page
     updateCompareUrl() {
         let companiesCount = document.querySelectorAll('.comparisonButton')
         let accumulatedSymbols = []
@@ -43,13 +69,12 @@ class CompareStocks {
             accumulatedSymbols.push(companiesCount[i].innerText.split(" ", 1))
         }
 
+
         const UrlString = accumulatedSymbols.join(",")
-        console.log(UrlString)
+
 
         this.compareXCompanies.innerHTML = `<a href="compare.html?symbols=${UrlString}">Compare ${companiesCount.length} Companies</a>`
     }
-
-
 
 
 }
@@ -104,10 +129,6 @@ class SearchResults extends CompareStocks {
         this.element.append(listContainer)
         searchContainer.append(this.element)
 
-        // This is the debounce for the auto search
-        this.debouncedSaveInput = this.debounce(this.saveInput.bind(this), 1000);
-
-
         // Event listener that sends a fetch based on input value (including the autosearch debounce feature)
         this.searchValue.addEventListener('keyup', this.debounce(this.getStockData.bind(this), 1000))
 
@@ -131,10 +152,10 @@ class SearchResults extends CompareStocks {
 
         // Change URL to add query string in milestone 2.2 but use an IF statement to make sure if the input is blank to return nothing and stop the function
         let newUrl = baseUrl + `?query=${searchInput}`;
-        if(searchInput === ""){
+        if (searchInput === "") {
             history.pushState(null, '', baseUrl);
             return;
-        }  else{
+        } else {
             history.pushState(null, '', newUrl);
         }
 
@@ -261,7 +282,6 @@ class SearchResults extends CompareStocks {
         for (let i = 0; i < array.length; i++) {
             if (array[i].symbol === symbol) {
                 let stockSymbol = array[i].symbol
-                // console.log(array[i].symbol);
                 this.addAndRemoveList(stockSymbol)
 
 
@@ -279,18 +299,6 @@ class SearchResults extends CompareStocks {
             timer = setTimeout(() => { func.apply(this, args); }, timeout);
         };
     }
-
-    saveInput() {
-        console.log(this.searchValue.value);
-    }
-
-    hello() {
-        // Call the debounced version of saveInput
-        this.debouncedSaveInput();
-    }
-
-
-
 
 }
 
